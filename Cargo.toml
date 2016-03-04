@@ -1,0 +1,14 @@
+[package]
+name = "tag_db_server"
+version = "0.1.0"
+authors = ["coco <coco@hexgolems.com>"]
+
+[dependencies]
+unix_socket = "0.5.*"
+byteorder = "0.4.*"
+
+[dependencies.tag_db]
+git = "file:/home/me/proggen/rust/tag_db"
+
+[dependencies.rmp]
+rmp = "^0.7"
