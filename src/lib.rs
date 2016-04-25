@@ -10,7 +10,6 @@ mod mp_serialize;
 use std::thread;
 use std::sync::RwLock;
 use std::sync::Arc;
-use std::fs;
 use unix_socket::{UnixStream, UnixListener};
 use dberror::DBError;
 use mp_parser::parse_one_instruction;
@@ -27,7 +26,8 @@ fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(
 }
 
 fn handle_client(stream: UnixStream, dblock: Arc<RwLock<Box<DB>>>){
-    let res = client_loop(dblock, stream);
+    let _ = client_loop(dblock, stream);
+    //let res = client_loop(dblock, stream);
     //println!("Connection Terminated: {:?}", res);
 }
 
@@ -41,7 +41,7 @@ pub fn run_database(listener: UnixListener){
                 let arc = dblock.clone();
                 thread::spawn(|| handle_client(stream, arc));
             }
-            Err(err) => {
+            Err(_) => {
                 /* connection failed */
                 //println!("Connection failed due to {}",err);
                 break;

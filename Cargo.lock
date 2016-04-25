@@ -4,7 +4,7 @@ version = "0.2.0"
 dependencies = [
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "tag_db 0.3.6 (git+file:///home/me/proggen/rust/tag_db)",
+ "tag_db 0.3.7 (git+file:///home/me/proggen/rust/tag_db)",
  "unix_socket 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -75,8 +75,8 @@ dependencies = [
 
 [[package]]
 name = "tag_db"
-version = "0.3.6"
-source = "git+file:///home/me/proggen/rust/tag_db#dbf0184d1e26466d0cfb44b3b978ab4156e5848d"
+version = "0.3.7"
+source = "git+file:///home/me/proggen/rust/tag_db#dba57b24d40843bafb3db515656d5a8c01f6fce5"
 dependencies = [
  "interval_tree 0.4.1 (git+https://github.com/eqv/interval_tree)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",

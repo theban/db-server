@@ -4,7 +4,7 @@ extern crate tag_db_server;
 //mod tag_db_server;
 
 use std::fs;
-use unix_socket::{UnixStream, UnixListener};
+use unix_socket::{UnixListener};
 
 fn main(){
     let _ = fs::remove_file("./socket");

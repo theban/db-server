@@ -109,3 +109,5 @@ assert_eq( db.bget( "mem", [0..1000] ),                                         
 assert_eq( db.bdel( "mem", [2..3] ),                                                                    :ok )
 assert_eq( db.bget( "mem", [0..1000] ),                                  {1..1=>[1,"a"], 4..6 => [1,"def"]} )
 assert_eq( db.bget( "non", [0..1000] ),                                                                  {} )
+
+puts "tests successfull"
