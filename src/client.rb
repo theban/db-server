@@ -85,9 +85,11 @@ end
 
 
 db = TagDB.new
+
 def assert_eq(a,b)
   binding.pry unless a == b
 end
+
 assert_eq( db.put( "objs", {1..5 => "foo", 4..6 => "bar", 3..4 => "blub", 100..1001 => "fnord"} ),      :ok )
 assert_eq( db.put( "objs", {1..5 => "bla"} ),                                                           :ok )
 
