@@ -36,8 +36,7 @@ fn parse_range<'a>(mut stream: &mut Read) -> Result<Range, DBError<'a>>{
 fn parse_range_args<'a>(mut stream: &mut Read) -> Result<Vec<Range>, DBError<'a>>{
     let args_len = try!( rmp::decode::read_array_size(&mut stream) );
     let mut res = Vec::with_capacity(args_len as usize);
-    println!("Len {}",args_len);
-    for i in 0..args_len {
+    for _ in 0..args_len {
         res.push(try!(parse_range(stream)));
     }
     return Ok(res);
@@ -55,7 +54,7 @@ fn parse_write_arg<'a>(mut stream: &mut Read) -> Result<WriteAccess, DBError<'a>
 fn parse_write_args<'a>(mut stream: &mut  Read) -> Result<Vec<WriteAccess>, DBError<'a>>{
     let args_len = try!( rmp::decode::read_array_size(&mut stream) );
     let mut res = Vec::with_capacity(args_len as usize );
-    for i in 0..args_len {
+    for _ in 0..args_len {
         res.push(try!(parse_write_arg(&mut stream)));
     }
     return Ok(res);
@@ -69,10 +68,13 @@ pub fn parse_one_instruction<'a>(mut stream: &mut Read) -> Result<DBInstruction,
     let table = try!( parse_string(&mut stream) );
     let instr = try!(instr_from_opcode(opcode));
     match instr {
-        DBInstructionType::TGET     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::Get(table, args)); },
-        DBInstructionType::TPUT     =>  { let args = try!(parse_write_args(&mut stream)); return Ok(DBInstruction::Put(table, args)); },
-        DBInstructionType::TDEL     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::Del(table, args)); },
-        DBInstructionType::TDELALL  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::DelAll(table, args)); },
+        DBInstructionType::TOGET     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::OGet(table, args)); },
+        DBInstructionType::TOPUT     =>  { let args = try!(parse_write_args(&mut stream)); return Ok(DBInstruction::OPut(table, args)); },
+        DBInstructionType::TODEL     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::ODel(table, args)); },
+        DBInstructionType::TODELALL  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::ODelAll(table, args)); },
+        DBInstructionType::TBPUT  =>  { let args = try!(parse_write_args(&mut stream)); return Ok(DBInstruction::BPut(table,1, args)); },
+        DBInstructionType::TBGET  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::BGet(table, args)); },
+        DBInstructionType::TBDEL  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::BDel(table, 1, args)); },
         _ => unreachable!()
     }
 }

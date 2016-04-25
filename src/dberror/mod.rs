@@ -46,7 +46,7 @@ impl<'a> From<std::io::Error> for DBError<'a> {
 }
 
 impl<'a,T> From<std::sync::PoisonError<T>> for DBError<'a> {
-    fn from(err: std::sync::PoisonError<T>) -> DBError<'a> {
+    fn from(_: std::sync::PoisonError<T>) -> DBError<'a> {
         DBError::SyncError
     }
 }

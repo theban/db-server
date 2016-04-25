@@ -10,7 +10,6 @@ mod mp_serialize;
 use std::thread;
 use std::sync::RwLock;
 use std::sync::Arc;
-use std::io::Write;
 use std::fs;
 use unix_socket::{UnixStream, UnixListener};
 use dberror::DBError;
@@ -25,11 +24,9 @@ fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(
         println!("execution result {:?}", resp);
         try!(mp_serialize::print_serialize_result(resp, &mut stream));
     }
-    unreachable!();
 }
 
-fn handle_client(mut stream: UnixStream, dblock: Arc<RwLock<Box<DB>>>){
-    let mut db = DB::new();
+fn handle_client(stream: UnixStream, dblock: Arc<RwLock<Box<DB>>>){
     let res = client_loop(dblock, stream);
     println!("Connection Terminated: {:?}", res);
 }
