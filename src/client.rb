@@ -11,6 +11,8 @@ class TagDB
   TBPUT = 6
   TBDEL = 7
 
+  TSAVE = 8
+
   def initialize(path = "socket")
     @sock = UNIXSocket.new(path)
   end
@@ -81,6 +83,10 @@ class TagDB
     query( [TBPUT,tbl, convert_writes(writes)] )
   end
 
+  def saveas(file)
+    query( [TSAVE, file])
+  end
+
 end
 
 
@@ -110,4 +116,24 @@ assert_eq( db.bdel( "mem", [2..3] ),                                            
 assert_eq( db.bget( "mem", [0..1000] ),                                  {1..1=>[1,"a"], 4..6 => [1,"def"]} )
 assert_eq( db.bget( "non", [0..1000] ),                                                                  {} )
 
+db.saveas("test.dmp")
+
+file = MessagePack.unpack(File.read("test.dmp"))
+should = 
+[
+    {
+      "mem" => [],
+      "objs" => [ 3, 4, "blub" ]
+    },
+    {
+        "mem" => [ 
+              1, 1, [1, "a"],
+              4, 6, [1, "def" ]
+        ],
+        "objs" => []
+    }
+]
+
+assert_eq(file, should)
+File.delete("test.dmp")
 puts "tests successfull"

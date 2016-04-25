@@ -1,8 +1,6 @@
 extern crate unix_socket;
 extern crate tag_db_server;
 
-//mod tag_db_server;
-
 use std::fs;
 use unix_socket::{UnixListener};
 

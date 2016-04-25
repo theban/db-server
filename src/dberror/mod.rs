@@ -1,4 +1,5 @@
 extern crate rmp;
+extern crate tag_db;
 
 use std;
 use std::error;
@@ -7,6 +8,7 @@ use std::fmt;
 #[derive(Debug)]
 pub enum DBError<'a> {
     ProtocolError(String),
+    FileFormatError(String),
     ParseStringError(rmp::decode::DecodeStringError<'a>),
     ParseValueError(rmp::decode::ValueReadError),
     SendValueError(rmp::encode::ValueWriteError),
@@ -51,10 +53,26 @@ impl<'a,T> From<std::sync::PoisonError<T>> for DBError<'a> {
     }
 }
 
+impl<'a> From<tag_db::DBError<'a>> for DBError<'a>{
+    fn from(err: tag_db::DBError<'a>) -> DBError<'a>{
+        match err {
+            tag_db::DBError::ProtocolError(err)     =>  DBError::ProtocolError(err),
+            tag_db::DBError::FileFormatError(err)   =>  DBError::FileFormatError(err),
+            tag_db::DBError::ParseStringError(err)  =>  DBError::ParseStringError(err),
+            tag_db::DBError::ParseValueError(err)   =>  DBError::ParseValueError(err),
+            tag_db::DBError::SendValueError( err)   =>  DBError::SendValueError(err),
+            tag_db::DBError::UTF8Error( err)        =>  DBError::UTF8Error(err),
+            tag_db::DBError::IOError(err)           =>  DBError::IOError(err),
+            tag_db::DBError::SyncError              =>  DBError::SyncError,
+        }
+    }
+}
+
 impl<'a> fmt::Display for DBError<'a> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             DBError::ProtocolError(ref err) => write!(f, "Protocol Error: {}", err),
+            DBError::FileFormatError(ref err) => write!(f, "File Format Error: {}", err),
             DBError::ParseStringError(ref err) => write!(f, "Parse String Error: {}", err),
             DBError::ParseValueError(ref err) => write!(f,  "Parse Value Error: {}", err),
             DBError::SendValueError(ref err) => write!(f,  "Send Value Error: {}", err),
@@ -69,6 +87,7 @@ impl<'a> error::Error for DBError<'a> {
     fn description(&self) -> &str {
         match *self {
             DBError::ProtocolError(ref desc)     => desc,
+            DBError::FileFormatError(ref desc) => desc,
             DBError::ParseStringError(ref err)  => err.description(),
             DBError::ParseValueError(ref err)   => err.description(), 
             DBError::SendValueError(ref err)   => err.description(), 
@@ -81,6 +100,7 @@ impl<'a> error::Error for DBError<'a> {
     fn cause(&self) -> Option<&error::Error> {
         match *self {
             DBError::ProtocolError(_)           => None,
+            DBError::FileFormatError(_)   => None,
             DBError::ParseStringError(ref err)  => Some(err), 
             DBError::ParseValueError(ref err)   => Some(err), 
             DBError::SendValueError(ref err)    => Some(err), 

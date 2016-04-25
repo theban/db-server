@@ -27,7 +27,8 @@ pub enum DBInstructionType {
     TBPUT = 6,
     TBDEL = 7,
 
-    TLAST = 8,
+    TSAVE = 8,
+    TLAST = 9,
 }
 
 pub fn instr_from_opcode<'a>(opcode : u64) -> Result<DBInstructionType,DBError<'a>>{
@@ -42,7 +43,8 @@ pub fn instr_from_opcode<'a>(opcode : u64) -> Result<DBInstructionType,DBError<'
         6 => Ok(DBInstructionType::TBPUT),
         7 => Ok(DBInstructionType::TBDEL),
 
-        8 => Ok(DBInstructionType::TLAST),
+        8 => Ok(DBInstructionType::TSAVE),
+        9 => Ok(DBInstructionType::TLAST),
         _ => unreachable!(),
     }
 }
@@ -56,6 +58,7 @@ pub enum DBInstruction {
     BGet(String, Vec<Range>),
     BPut(String, u64, Vec<WriteAccess>), // table, datasize, data
     BDel(String, u64, Vec<Range>),
+    Save(String),
 }
 
 #[derive(Debug)]
@@ -102,9 +105,6 @@ fn delall_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -
     return Ok(DBResult::Done)
 }
 
-
-
-
 fn get_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
     let mut data = HashMap::new();
     let db_access = try!(db.read());
@@ -134,6 +134,12 @@ fn del_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs
     return Ok(DBResult::Done)
 }
 
+fn save_to_file<'a>(db: Arc<RwLock<Box<DB>>>, file: &String) -> Result<DBResult, DBError<'a>>{
+    let db_access = try!(db.read());
+    try!(db_access.save_to_file(file));
+    return Ok(DBResult::Done)
+}
+
 
 pub fn execute_db_instruction<'a>(db: Arc<RwLock<Box<DB>>>, instr: DBInstruction) -> Result<DBResult, DBError<'a>>{
     match instr {
@@ -144,5 +150,6 @@ pub fn execute_db_instruction<'a>(db: Arc<RwLock<Box<DB>>>, instr: DBInstruction
         DBInstruction::BGet(table, ranges) => get_bquery(db, table, ranges),
         DBInstruction::BPut(table, entry_size, access) => put_bquery(db, table, entry_size, access),
         DBInstruction::BDel(table, entry_size, ranges) => del_bquery(db, table, entry_size, ranges),
+        DBInstruction::Save(file) => save_to_file(db, &file),
     }
 }

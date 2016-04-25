@@ -60,14 +60,10 @@ fn parse_write_args<'a>(mut stream: &mut  Read) -> Result<Vec<WriteAccess>, DBEr
     return Ok(res);
 }
 
-
-pub fn parse_one_instruction<'a>(mut stream: &mut Read) -> Result<DBInstruction,DBError<'a>>{
-    let tup_len = try!( rmp::decode::read_array_size(&mut stream) );
-    if tup_len != 3 {return Err(DBError::ProtocolError("instruction tuple should have size 3".into()))}
-    let opcode = try!( rmp::decode::read_u64_loosely(&mut stream));
+fn parse_table_instruction<'a>(mut stream: &mut Read,opcode: DBInstructionType, instr_len: u64) -> Result<DBInstruction, DBError<'a>>{
+    if instr_len != 3 {return Err(DBError::ProtocolError("instruction tuple should have size 3".into()))}
     let table = try!( parse_string(&mut stream) );
-    let instr = try!(instr_from_opcode(opcode));
-    match instr {
+    return match opcode {
         DBInstructionType::TOGET     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::OGet(table, args)); },
         DBInstructionType::TOPUT     =>  { let args = try!(parse_write_args(&mut stream)); return Ok(DBInstruction::OPut(table, args)); },
         DBInstructionType::TODEL     =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::ODel(table, args)); },
@@ -76,5 +72,21 @@ pub fn parse_one_instruction<'a>(mut stream: &mut Read) -> Result<DBInstruction,
         DBInstructionType::TBGET  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::BGet(table, args)); },
         DBInstructionType::TBDEL  =>  { let args = try!(parse_range_args(&mut stream)); return Ok(DBInstruction::BDel(table, 1, args)); },
         _ => unreachable!()
+    }
+}
+
+fn parse_save_instruction<'a>(mut stream: &mut Read, instr_len: u64) -> Result<DBInstruction, DBError<'a>>{
+    if instr_len != 2 {return Err(DBError::ProtocolError("save instruction tuple should have size 2".into()))}
+    let filename = try!(parse_string(&mut stream));
+    return Ok(DBInstruction::Save(filename));
+}
+
+pub fn parse_one_instruction<'a>(mut stream: &mut Read) -> Result<DBInstruction,DBError<'a>>{
+    let tup_len = try!( rmp::decode::read_array_size(&mut stream) ) as u64 ;
+    let opcode = try!( rmp::decode::read_u64_loosely(&mut stream));
+    let instr = try!(instr_from_opcode(opcode));
+    match instr {
+        DBInstructionType::TSAVE => parse_save_instruction(&mut stream, tup_len),
+        _ => parse_table_instruction(&mut stream, instr, tup_len),
     }
 }
