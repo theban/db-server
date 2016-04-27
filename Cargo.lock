@@ -2,11 +2,17 @@
 name = "tag_db_server"
 version = "0.2.0"
 dependencies = [
+ "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "tag_db 0.3.7 (git+https://github.com/eqv/tag_db)",
+ "tag_db 0.3.10 (git+https://github.com/eqv/tag_db)",
  "unix_socket 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
+
+[[package]]
+name = "argparse"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "byteorder"
@@ -25,8 +31,8 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "interval_tree"
-version = "0.4.1"
-source = "git+https://github.com/eqv/interval_tree#130dec9d70ff9e7a84159e6a01477ab9f3fc06f5"
+version = "0.5.0"
+source = "git+https://github.com/eqv/interval_tree#94ad9093829cd599930e428780a866ccd8b78e60"
 dependencies = [
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -64,10 +70,10 @@ dependencies = [
 
 [[package]]
 name = "tag_db"
-version = "0.3.7"
-source = "git+https://github.com/eqv/tag_db#dba57b24d40843bafb3db515656d5a8c01f6fce5"
+version = "0.3.10"
+source = "git+https://github.com/eqv/tag_db#d9a876916d349be66c8f7128457475ac2d48fa23"
 dependencies = [
- "interval_tree 0.4.1 (git+https://github.com/eqv/interval_tree)",
+ "interval_tree 0.5.0 (git+https://github.com/eqv/interval_tree)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

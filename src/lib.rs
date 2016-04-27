@@ -31,8 +31,8 @@ fn handle_client(stream: UnixStream, dblock: Arc<RwLock<Box<DB>>>){
     //println!("Connection Terminated: {:?}", res);
 }
 
-pub fn run_database(listener: UnixListener){
-    let dblock = Arc::new(RwLock::new(Box::new(DB::new())));
+pub fn run_database(db: DB, listener: UnixListener){
+    let dblock = Arc::new(RwLock::new(Box::new(db)));
 
     // accept connections and process them, spawning a new thread for each one
     for stream in listener.incoming() {

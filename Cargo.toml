@@ -7,6 +7,7 @@ authors = ["coco <coco@hexgolems.com>"]
 unix_socket = "0.5.*"
 byteorder = "0.4.*"
 rmp = "^0.7"
+argparse = "*"
 
 [dependencies.tag_db]
 git = "https://github.com/eqv/tag_db"
