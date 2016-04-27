@@ -1,10 +1,11 @@
 extern crate rmp;
+extern crate memrange;
 
 use std::io::Write;
 use std::collections::HashMap;
 use dberror::DBError;
 use db_instruction::DBResult;
-use tag_db::Range;
+use self::memrange::Range;
 use tag_db::Bitmap;
 
 fn print_serialize_done<'a>(mut sink: &mut Write) -> Result<(),DBError<'a>> {

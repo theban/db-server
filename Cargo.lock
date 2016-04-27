@@ -4,8 +4,9 @@ version = "0.2.0"
 dependencies = [
  "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memrange 0.1.0 (git+https://github.com/theban/memrange)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "tag_db 0.3.10 (git+https://github.com/eqv/tag_db)",
+ "tag_db 0.4.0 (git+https://github.com/eqv/tag_db)",
  "unix_socket 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -31,9 +32,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "interval_tree"
-version = "0.5.0"
-source = "git+https://github.com/eqv/interval_tree#94ad9093829cd599930e428780a866ccd8b78e60"
+version = "0.6.0"
+source = "git+https://github.com/eqv/interval_tree#9f1f47361f2cf355cde89c6e1887c40e4a3bd74f"
 dependencies = [
+ "memrange 0.1.0 (git+https://github.com/theban/memrange)",
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
@@ -53,6 +55,11 @@ version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
+name = "memrange"
+version = "0.1.0"
+source = "git+https://github.com/theban/memrange#3c85635d999d093e7b40ac45eaeaf2968d5362a7"
+
+[[package]]
 name = "rand"
 version = "0.3.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -70,10 +77,11 @@ dependencies = [
 
 [[package]]
 name = "tag_db"
-version = "0.3.10"
-source = "git+https://github.com/eqv/tag_db#d9a876916d349be66c8f7128457475ac2d48fa23"
+version = "0.4.0"
+source = "git+https://github.com/eqv/tag_db#653301ac154e4370ce3c5fe65387fb0267633184"
 dependencies = [
- "interval_tree 0.5.0 (git+https://github.com/eqv/interval_tree)",
+ "interval_tree 0.6.0 (git+https://github.com/eqv/interval_tree)",
+ "memrange 0.1.0 (git+https://github.com/theban/memrange)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 

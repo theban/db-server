@@ -1,8 +1,9 @@
 extern crate unix_socket;
 extern crate rmp;
+extern crate memrange;
 
 use std::io::Read;
-use tag_db::Range;
+use self::memrange::Range;
 use dberror::DBError;
 use db_instruction::{DBInstruction, WriteAccess, DBInstructionType, instr_from_opcode};
 

@@ -1,6 +1,7 @@
 extern crate tag_db;
+extern crate memrange;
 
-use tag_db::Range;
+use self::memrange::Range;
 use tag_db::DB;
 use tag_db::Bitmap;
 use dberror::DBError;
