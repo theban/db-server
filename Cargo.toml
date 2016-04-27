@@ -3,6 +3,8 @@ name = "theban_db_server"
 version = "0.3.0"
 authors = ["coco <coco@hexgolems.com>"]
 license-file = "LICENSE"
+repository = "https://github.com/theban/db-server"
+description = "a unix socket server for theban_db"
 
 [dependencies]
 unix_socket = "0.5.*"
