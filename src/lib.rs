@@ -1,6 +1,6 @@
 extern crate unix_socket;
 extern crate byteorder;
-extern crate tag_db;
+extern crate theban_db;
 
 mod dberror;
 mod db_instruction;
@@ -13,7 +13,7 @@ use std::sync::Arc;
 use unix_socket::{UnixStream, UnixListener};
 use dberror::DBError;
 use mp_parser::parse_one_instruction;
-use tag_db::DB;
+use theban_db::DB;
 
 fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(), DBError<'a>>{
     loop {

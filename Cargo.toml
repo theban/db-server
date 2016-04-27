@@ -1,16 +1,13 @@
 [package]
-name = "tag_db_server"
+name = "theban_db_server"
 version = "0.3.0"
 authors = ["coco <coco@hexgolems.com>"]
+license-file = "LICENSE"
 
 [dependencies]
 unix_socket = "0.5.*"
 byteorder = "0.4.*"
 rmp = "^0.7"
-argparse = "*"
-
-[dependencies.memrange]
-git = "https://github.com/theban/memrange"
-
-[dependencies.tag_db]
-git = "https://github.com/eqv/tag_db"
+argparse = "0.2.*"
+memrange = "0.1.*"
+theban_db = "0.4.*"

@@ -6,7 +6,7 @@ use std::collections::HashMap;
 use dberror::DBError;
 use db_instruction::DBResult;
 use self::memrange::Range;
-use tag_db::Bitmap;
+use theban_db::Bitmap;
 
 fn print_serialize_done<'a>(mut sink: &mut Write) -> Result<(),DBError<'a>> {
     try!(rmp::encode::write_array_len(&mut sink, 1));

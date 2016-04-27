@@ -19,7 +19,7 @@ class TagDB
     @sock = UNIXSocket.new(path)
   end
 
-  def self.spawn(db_path: nil, sock_path: "./socket", binary_path: find_executable('tag_db_server'))
+  def self.spawn(db_path: nil, sock_path: "./socket", binary_path: find_executable('theban_db_server'))
     args = [binary_path,"-s",sock_path]
     args << [db_path] if db_path
     puts args.join(" ")

@@ -1,5 +1,5 @@
 extern crate rmp;
-extern crate tag_db;
+extern crate theban_db;
 
 use std;
 use std::error;
@@ -53,17 +53,17 @@ impl<'a,T> From<std::sync::PoisonError<T>> for DBError<'a> {
     }
 }
 
-impl<'a> From<tag_db::DBError<'a>> for DBError<'a>{
-    fn from(err: tag_db::DBError<'a>) -> DBError<'a>{
+impl<'a> From<theban_db::DBError<'a>> for DBError<'a>{
+    fn from(err: theban_db::DBError<'a>) -> DBError<'a>{
         match err {
-            tag_db::DBError::ProtocolError(err)     =>  DBError::ProtocolError(err),
-            tag_db::DBError::FileFormatError(err)   =>  DBError::FileFormatError(err),
-            tag_db::DBError::ParseStringError(err)  =>  DBError::ParseStringError(err),
-            tag_db::DBError::ParseValueError(err)   =>  DBError::ParseValueError(err),
-            tag_db::DBError::SendValueError( err)   =>  DBError::SendValueError(err),
-            tag_db::DBError::UTF8Error( err)        =>  DBError::UTF8Error(err),
-            tag_db::DBError::IOError(err)           =>  DBError::IOError(err),
-            tag_db::DBError::SyncError              =>  DBError::SyncError,
+            theban_db::DBError::ProtocolError(err)     =>  DBError::ProtocolError(err),
+            theban_db::DBError::FileFormatError(err)   =>  DBError::FileFormatError(err),
+            theban_db::DBError::ParseStringError(err)  =>  DBError::ParseStringError(err),
+            theban_db::DBError::ParseValueError(err)   =>  DBError::ParseValueError(err),
+            theban_db::DBError::SendValueError( err)   =>  DBError::SendValueError(err),
+            theban_db::DBError::UTF8Error( err)        =>  DBError::UTF8Error(err),
+            theban_db::DBError::IOError(err)           =>  DBError::IOError(err),
+            theban_db::DBError::SyncError              =>  DBError::SyncError,
         }
     }
 }

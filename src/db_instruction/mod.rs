@@ -1,9 +1,9 @@
-extern crate tag_db;
+extern crate theban_db;
 extern crate memrange;
 
 use self::memrange::Range;
-use tag_db::DB;
-use tag_db::Bitmap;
+use theban_db::DB;
+use theban_db::Bitmap;
 use dberror::DBError;
 use std::collections::HashMap;
 use std::sync::RwLock;
@@ -85,7 +85,7 @@ fn get_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> R
 fn put_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<WriteAccess>) -> Result<DBResult, DBError<'a>> {
     let mut db_access = try!(db.write());
     for w in rngs {
-        db_access.insert_object(&table, w.rng, tag_db::Object::new(w.val))
+        db_access.insert_object(&table, w.rng, theban_db::Object::new(w.val))
     }
     return Ok(DBResult::Done)
 }
@@ -122,7 +122,7 @@ fn get_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> 
 fn put_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs: Vec<WriteAccess>) -> Result<DBResult, DBError<'a>> {
     let mut db_access = try!(db.write());
     for w in rngs {
-        db_access.insert_bitmap(&table, w.rng, tag_db::Bitmap::new(entry_size, w.val))
+        db_access.insert_bitmap(&table, w.rng, theban_db::Bitmap::new(entry_size, w.val))
     }
     return Ok(DBResult::Done)
 }

@@ -1,13 +1,13 @@
 extern crate unix_socket;
-extern crate tag_db_server;
-extern crate tag_db;
+extern crate theban_db_server;
+extern crate theban_db;
 extern crate argparse;
 
 use argparse::{ArgumentParser, Store, StoreOption};
 
 use std::fs;
 use unix_socket::{UnixListener};
-use tag_db::DB;
+use theban_db::DB;
 
 fn main(){
     let mut filename = None;
@@ -29,5 +29,5 @@ fn main(){
     };
     let _ = fs::remove_file(&sockname);
     let listener = UnixListener::bind(&sockname).unwrap();
-    tag_db_server::run_database(db,listener);
+    theban_db_server::run_database(db,listener);
 }

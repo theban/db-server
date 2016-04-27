@@ -1,12 +1,12 @@
 [root]
-name = "tag_db_server"
-version = "0.2.0"
+name = "theban_db_server"
+version = "0.3.0"
 dependencies = [
  "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "memrange 0.1.0 (git+https://github.com/theban/memrange)",
+ "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "tag_db 0.4.0 (git+https://github.com/eqv/tag_db)",
+ "theban_db 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "unix_socket 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -31,16 +31,6 @@ version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
-name = "interval_tree"
-version = "0.6.0"
-source = "git+https://github.com/eqv/interval_tree#9f1f47361f2cf355cde89c6e1887c40e4a3bd74f"
-dependencies = [
- "memrange 0.1.0 (git+https://github.com/theban/memrange)",
- "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
- "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
-]
-
-[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -57,7 +47,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 [[package]]
 name = "memrange"
 version = "0.1.0"
-source = "git+https://github.com/theban/memrange#3c85635d999d093e7b40ac45eaeaf2968d5362a7"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "rand"
@@ -76,13 +66,23 @@ dependencies = [
 ]
 
 [[package]]
-name = "tag_db"
+name = "theban_db"
 version = "0.4.0"
-source = "git+https://github.com/eqv/tag_db#653301ac154e4370ce3c5fe65387fb0267633184"
+source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "interval_tree 0.6.0 (git+https://github.com/eqv/interval_tree)",
- "memrange 0.1.0 (git+https://github.com/theban/memrange)",
+ "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
+ "theban_interval_tree 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
+[[package]]
+name = "theban_interval_tree"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
+ "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
