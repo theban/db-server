@@ -4,9 +4,9 @@ version = "0.3.0"
 dependencies = [
  "argparse 0.2.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "byteorder 0.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
- "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memrange 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "theban_db 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "theban_db 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "unix_socket 0.5.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -46,8 +46,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "memrange"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "rustc-serialize 0.3.19 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "rand"
@@ -66,21 +69,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "rustc-serialize"
+version = "0.3.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "theban_db"
-version = "0.4.0"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memrange 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rmp 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
- "theban_interval_tree 0.6.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "theban_interval_tree 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "theban_interval_tree"
-version = "0.6.2"
+version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "memrange 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "memrange 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "rand 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
  "time 0.1.35 (registry+https://github.com/rust-lang/crates.io-index)",
 ]

@@ -101,7 +101,7 @@ fn del_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> R
 fn delall_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
     let mut db_access = try!(db.write());
     for rng in rngs {
-        db_access.delete_all_objects(&table, rng)
+        db_access.delete_intersecting_objects(&table, rng)
     }
     return Ok(DBResult::Done)
 }
