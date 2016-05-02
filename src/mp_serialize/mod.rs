@@ -4,7 +4,7 @@ extern crate memrange;
 use std::io::Write;
 use std::collections::HashMap;
 use dberror::DBError;
-use db_instruction::DBResult;
+use db_instruction::DBAnswer;
 use self::memrange::Range;
 use theban_db::Bitmap;
 
@@ -41,10 +41,10 @@ fn print_serialize_bitmaps<'a>(data: HashMap<Range,Bitmap>, mut sink: &mut Write
     return Ok(())
 }
 
-pub fn print_serialize_result<'a>(res: DBResult, mut sink: &mut Write) -> Result<(),DBError<'a>> {
+pub fn print_serialize_result<'a>(res: DBAnswer, mut sink: &mut Write) -> Result<(),DBError<'a>> {
     match res {
-        DBResult::Done => print_serialize_done(sink),
-        DBResult::Tags(data) => print_serialize_tags(data, sink),
-        DBResult::Bitmap(data) => print_serialize_bitmaps(data, sink),
+        DBAnswer::Done => print_serialize_done(sink),
+        DBAnswer::Tags(data) => print_serialize_tags(data, sink),
+        DBAnswer::Bitmap(data) => print_serialize_bitmaps(data, sink),
     }
 }

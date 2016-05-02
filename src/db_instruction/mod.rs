@@ -63,13 +63,13 @@ pub enum DBInstruction {
 }
 
 #[derive(Debug)]
-pub enum DBResult {
+pub enum DBAnswer {
     Done,
     Tags(HashMap<Range,Vec<u8>>),
     Bitmap(HashMap<Range, Bitmap>),
 }
 
-fn get_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
+fn get_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBAnswer, DBError<'a>> {
     let mut data = HashMap::new();
     let db_access = try!(db.read());
     for rng in rngs {
@@ -79,34 +79,34 @@ fn get_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> R
             }
         }
     }
-    return Ok(DBResult::Tags(data))
+    return Ok(DBAnswer::Tags(data))
 }
 
-fn put_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<WriteAccess>) -> Result<DBResult, DBError<'a>> {
+fn put_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<WriteAccess>) -> Result<DBAnswer, DBError<'a>> {
     let mut db_access = try!(db.write());
     for w in rngs {
         db_access.insert_object(&table, w.rng, theban_db::Object::new(w.val))
     }
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
-fn del_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
+fn del_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBAnswer, DBError<'a>> {
     let mut db_access = try!(db.write());
     for rng in rngs {
         db_access.delete_object(&table, rng)
     }
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
-fn delall_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
+fn delall_query<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBAnswer, DBError<'a>> {
     let mut db_access = try!(db.write());
     for rng in rngs {
         db_access.delete_intersecting_objects(&table, rng)
     }
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
-fn get_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
+fn get_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> Result<DBAnswer, DBError<'a>> {
     let mut data = HashMap::new();
     let db_access = try!(db.read());
     for rng in rngs {
@@ -116,33 +116,33 @@ fn get_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, rngs: Vec<Range>) -> 
             }
         }
     }
-    return Ok(DBResult::Bitmap(data))
+    return Ok(DBAnswer::Bitmap(data))
 }
 
-fn put_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs: Vec<WriteAccess>) -> Result<DBResult, DBError<'a>> {
+fn put_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs: Vec<WriteAccess>) -> Result<DBAnswer, DBError<'a>> {
     let mut db_access = try!(db.write());
     for w in rngs {
         db_access.insert_bitmap(&table, w.rng, theban_db::Bitmap::new(entry_size, w.val))
     }
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
-fn del_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs: Vec<Range>) -> Result<DBResult, DBError<'a>> {
+fn del_bquery<'a>(db: Arc<RwLock<Box<DB>>>, table: String, entry_size: u64, rngs: Vec<Range>) -> Result<DBAnswer, DBError<'a>> {
     let mut db_access = try!(db.write());
     for rng in rngs {
         db_access.delete_bitmap(&table, entry_size, rng)
     }
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
-fn save_to_file<'a>(db: Arc<RwLock<Box<DB>>>, file: &String) -> Result<DBResult, DBError<'a>>{
+fn save_to_file<'a>(db: Arc<RwLock<Box<DB>>>, file: &String) -> Result<DBAnswer, DBError<'a>>{
     let db_access = try!(db.read());
     try!(db_access.save_to_file(file));
-    return Ok(DBResult::Done)
+    return Ok(DBAnswer::Done)
 }
 
 
-pub fn execute_db_instruction<'a>(db: Arc<RwLock<Box<DB>>>, instr: DBInstruction) -> Result<DBResult, DBError<'a>>{
+pub fn execute_db_instruction<'a>(db: Arc<RwLock<Box<DB>>>, instr: DBInstruction) -> Result<DBAnswer, DBError<'a>>{
     match instr {
         DBInstruction::OGet(table, ranges) => get_query(db, table, ranges),
         DBInstruction::OPut(table, access) => put_query(db, table, access),
