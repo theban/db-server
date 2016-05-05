@@ -8,16 +8,11 @@ mod dberror;
 mod db_instruction;
 mod encoding;
 
-extern crate memrange;
-use memrange::Range;
-use db_instruction::{DBInstruction, DBAnswer, WriteAccess};
-
 use std::thread;
 use std::sync::RwLock;
 use std::sync::Arc;
 use unix_socket::{UnixStream, UnixListener};
 use dberror::DBServerError;
-//use mp_parser::parse_one_instruction;
 use theban_db::DB;
 
 fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(), DBServerError>{
