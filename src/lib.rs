@@ -4,22 +4,22 @@ extern crate theban_db;
 extern crate rustc_serialize;
 #[macro_use] extern crate quick_error;
 
-mod dberror;
-mod db_instruction;
+mod error;
+mod instruction;
 mod encoding;
 
 use std::thread;
 use std::sync::RwLock;
 use std::sync::Arc;
 use unix_socket::{UnixStream, UnixListener};
-use dberror::DBServerError;
+use error::DBServerError;
 use theban_db::DB;
 
 fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(), DBServerError>{
     loop {
         let instr = try!(encoding::decode_instruction(&mut stream));
         //println!("Client said: {:?}", &instr);
-        let resp = try!(db_instruction::execute_db_instruction(db.clone(), instr));
+        let resp = try!(instruction::execute_db_instruction(db.clone(), instr));
         //println!("execution result {:?}", resp);
         try!(encoding::encode_answer(resp, &mut stream));
     }

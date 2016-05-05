@@ -4,9 +4,9 @@ extern crate rustc_serialize;
 use std::io::Write;
 use std::io::Read;
 
-use db_instruction::DBAnswer;
-use db_instruction::DBInstruction;
-use dberror::NetworkEncodingError;
+use instruction::DBAnswer;
+use instruction::DBInstruction;
+use error::NetworkEncodingError;
 
 use self::rustc_serialize::{Decodable,Encodable};
 use self::msgpack::{Decoder,Encoder};

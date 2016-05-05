@@ -6,7 +6,7 @@ extern crate memrange;
 use self::memrange::Range;
 use theban_db::DB;
 use theban_db::Bitmap;
-use dberror::DBServerError;
+use error::DBServerError;
 use std::collections::HashMap;
 use std::sync::RwLock;
 use std::sync::Arc;
