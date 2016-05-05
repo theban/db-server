@@ -1,112 +1,52 @@
 extern crate rmp;
 extern crate theban_db;
+extern crate rmp_serialize as msgpack;
 
 use std;
-use std::error;
-use std::fmt;
+use theban_db::dberror::DBError;
 
-#[derive(Debug)]
-pub enum DBError<'a> {
-    ProtocolError(String),
-    FileFormatError(String),
-    ParseStringError(rmp::decode::DecodeStringError<'a>),
-    ParseValueError(rmp::decode::ValueReadError),
-    SendValueError(rmp::encode::ValueWriteError),
-    UTF8Error(std::string::FromUtf8Error),
-    IOError(std::io::Error),
-    SyncError,
-}
 
-impl<'a> From<rmp::decode::DecodeStringError<'a>> for DBError<'a> {
-    fn from(err: rmp::decode::DecodeStringError<'a>) -> DBError<'a> {
-        DBError::ParseStringError(err)
-    }
-}
-
-impl<'a> From<rmp::decode::ValueReadError> for DBError<'a> {
-    fn from(err: rmp::decode::ValueReadError) -> DBError<'a> {
-        DBError::ParseValueError(err)
-    }
-}
-
-impl<'a> From<rmp::encode::ValueWriteError> for DBError<'a> {
-    fn from(err: rmp::encode::ValueWriteError) -> DBError<'a> {
-        DBError::SendValueError(err)
-    }
-}
-
-impl<'a> From<std::string::FromUtf8Error> for DBError<'a> {
-    fn from(err: std::string::FromUtf8Error) -> DBError<'a> {
-        DBError::UTF8Error(err)
-    }
-}
-
-impl<'a> From<std::io::Error> for DBError<'a> {
-    fn from(err: std::io::Error) -> DBError<'a> {
-        DBError::IOError(err)
-    }
-}
-
-impl<'a,T> From<std::sync::PoisonError<T>> for DBError<'a> {
-    fn from(_: std::sync::PoisonError<T>) -> DBError<'a> {
-        DBError::SyncError
-    }
-}
-
-impl<'a> From<theban_db::DBError<'a>> for DBError<'a>{
-    fn from(err: theban_db::DBError<'a>) -> DBError<'a>{
-        match err {
-            theban_db::DBError::ProtocolError(err)     =>  DBError::ProtocolError(err),
-            theban_db::DBError::FileFormatError(err)   =>  DBError::FileFormatError(err),
-            theban_db::DBError::ParseStringError(err)  =>  DBError::ParseStringError(err),
-            theban_db::DBError::ParseValueError(err)   =>  DBError::ParseValueError(err),
-            theban_db::DBError::SendValueError( err)   =>  DBError::SendValueError(err),
-            theban_db::DBError::UTF8Error( err)        =>  DBError::UTF8Error(err),
-            theban_db::DBError::IOError(err)           =>  DBError::IOError(err),
-            theban_db::DBError::SyncError              =>  DBError::SyncError,
+quick_error! {
+    #[derive(Debug)]
+    pub enum NetworkEncodingError {
+        Encodinge(err: msgpack::encode::Error) {
+            from()
+            description("network encoding error")
+            display("Failed to encode for network: {}", err)
+            cause(err)
+        }
+        Decodinge(err: msgpack::decode::Error) {
+            from()
+            description("network decoding error")
+            display("Failed to decode from network: {}", err)
+            cause(err)
         }
     }
 }
 
-impl<'a> fmt::Display for DBError<'a> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            DBError::ProtocolError(ref err) => write!(f, "Protocol Error: {}", err),
-            DBError::FileFormatError(ref err) => write!(f, "File Format Error: {}", err),
-            DBError::ParseStringError(ref err) => write!(f, "Parse String Error: {}", err),
-            DBError::ParseValueError(ref err) => write!(f,  "Parse Value Error: {}", err),
-            DBError::SendValueError(ref err) => write!(f,  "Send Value Error: {}", err),
-            DBError::UTF8Error(ref err) => write!(f,  "UTF8 Error: {}", err),
-            DBError::IOError(ref err) => write!(f, "IO error: {}", err),
-            DBError::SyncError => write!(f, "Sync error"),
+quick_error! {
+    #[derive(Debug)]
+    pub enum DBServerError {
+        NetworkEncoding(err: NetworkEncodingError){
+            description("Failed to decode/encode data for networking")
+            display("Failed to decode/encode data for networking: {}", err)
+            from()
+            cause(err)
+        }
+        DB(err: DBError){
+            description("Error in DB")
+            display("Error in DB: {}", err)
+            from()
+            cause(err)
+        }
+        SyncError{
+            description("One thread paniced while holding a lock to the DB")
         }
     }
 }
 
-impl<'a> error::Error for DBError<'a> {
-    fn description(&self) -> &str {
-        match *self {
-            DBError::ProtocolError(ref desc)     => desc,
-            DBError::FileFormatError(ref desc) => desc,
-            DBError::ParseStringError(ref err)  => err.description(),
-            DBError::ParseValueError(ref err)   => err.description(), 
-            DBError::SendValueError(ref err)   => err.description(), 
-            DBError::UTF8Error(ref err)        => err.description(), 
-            DBError::IOError(ref err)           => err.description(), 
-            DBError::SyncError           => "one thread paniced while holding a lock to the db",
-        }
-    }
-
-    fn cause(&self) -> Option<&error::Error> {
-        match *self {
-            DBError::ProtocolError(_)           => None,
-            DBError::FileFormatError(_)   => None,
-            DBError::ParseStringError(ref err)  => Some(err), 
-            DBError::ParseValueError(ref err)   => Some(err), 
-            DBError::SendValueError(ref err)    => Some(err), 
-            DBError::UTF8Error(ref err)         => Some(err), 
-            DBError::IOError(ref err)           => Some(err), 
-            DBError::SyncError                  => None,
-        }
+impl<'a,T> From<std::sync::PoisonError<T>> for DBServerError {
+    fn from(_: std::sync::PoisonError<T>) -> DBServerError {
+        DBServerError::SyncError
     }
 }

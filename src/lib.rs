@@ -1,27 +1,32 @@
 extern crate unix_socket;
 extern crate byteorder;
 extern crate theban_db;
+extern crate rustc_serialize;
+#[macro_use] extern crate quick_error;
 
 mod dberror;
 mod db_instruction;
-mod mp_parser;
-mod mp_serialize;
+mod encoding;
+
+extern crate memrange;
+use memrange::Range;
+use db_instruction::{DBInstruction, DBAnswer, WriteAccess};
 
 use std::thread;
 use std::sync::RwLock;
 use std::sync::Arc;
 use unix_socket::{UnixStream, UnixListener};
-use dberror::DBError;
-use mp_parser::parse_one_instruction;
+use dberror::DBServerError;
+//use mp_parser::parse_one_instruction;
 use theban_db::DB;
 
-fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(), DBError<'a>>{
+fn client_loop<'a>(db: Arc<RwLock<Box<DB>>>, mut stream: UnixStream) -> Result<(), DBServerError>{
     loop {
-        let instr = try!(parse_one_instruction(&mut stream));
+        let instr = try!(encoding::decode_instruction(&mut stream));
         //println!("Client said: {:?}", &instr);
         let resp = try!(db_instruction::execute_db_instruction(db.clone(), instr));
         //println!("execution result {:?}", resp);
-        try!(mp_serialize::print_serialize_result(resp, &mut stream));
+        try!(encoding::encode_answer(resp, &mut stream));
     }
 }
 
@@ -41,9 +46,9 @@ pub fn run_database(db: DB, listener: UnixListener){
                 let arc = dblock.clone();
                 thread::spawn(|| handle_client(stream, arc));
             }
-            Err(_) => {
+            Err(err) => {
                 /* connection failed */
-                //println!("Connection failed due to {}",err);
+                println!("Connection failed due to {}",err);
                 break;
             }
         }
