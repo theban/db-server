@@ -4,9 +4,9 @@ extern crate theban_db;
 extern crate rustc_serialize;
 #[macro_use] extern crate quick_error;
 
-mod error;
-mod instruction;
-mod encoding;
+pub mod error;
+pub mod instruction;
+pub mod encoding;
 
 use std::thread;
 use std::sync::RwLock;

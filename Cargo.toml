@@ -1,6 +1,6 @@
 [package]
 name = "theban_db_server"
-version = "0.3.4"
+version = "0.3.5"
 authors = ["coco <coco@hexgolems.com>"]
 license-file = "LICENSE"
 repository = "https://github.com/theban/db-server"
